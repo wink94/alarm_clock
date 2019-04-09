@@ -1,0 +1,147 @@
+package com.windula.alam_clock10;
+
+import android.app.Activity;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TimePicker;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class popupActivity extends Activity {
+
+    private HashMap<String,Integer> alarmMap;
+    private MediaPlayer mediaPlayer;
+    private TimePicker timePicker;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_popup);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width=dm.widthPixels;
+        int height=dm.heightPixels;
+
+        getWindow().setLayout((int)(width*.7),(int)(height*.7));
+
+        timePicker=(TimePicker) findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.gravity = Gravity.CENTER;
+        params.x=0;
+        params.y=-30;
+        getWindow().setAttributes(params);
+
+        getAudioFilesToSpinner();
+    }
+
+    private void getAudioFilesToSpinner(){
+        Spinner spinner = (Spinner) findViewById(R.id.alarmSpinnerList);
+        List<String> spinnerArray=new ArrayList<String>();;
+        alarmMap =new HashMap<String,Integer>();
+
+        Field[] fields=R.raw.class.getFields();
+
+        for(int count=0; count < fields.length; count++){
+            int value=getResources().getIdentifier(fields[count].getName(),"raw",getPackageName());
+            String key=fields[count].getName();
+            spinnerArray.add(key);
+            alarmMap.put(key,value);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,spinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String key=parent.getItemAtPosition(position).toString();
+
+                if( mediaPlayer==null ){
+                    mediaPlayer =  MediaPlayer.create(view.getContext(),alarmMap.get(key));
+                    mediaPlayer.start();
+                }
+                else{
+                  mediaPlayer.reset();
+                    try {
+                        mediaPlayer.setDataSource(view.getContext(), Uri.parse("android.resource://"
+                                + getPackageName()
+                                + "/"+alarmMap.get(key)));
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                if(mediaPlayer.isPlaying() && mediaPlayer!=null){
+                    mediaPlayer.stop();
+                }
+
+            }
+        });
+
+       /* spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String key=parent.getItemAtPosition(position).toString();
+
+                if(mediaPlayer==null){
+                    mediaPlayer =  MediaPlayer.create(view.getContext(),alarmMap.get(key));
+                    mediaPlayer.start();
+                }
+                else {
+                    mediaPlayer.reset();
+                    try {
+                        mediaPlayer.setDataSource(view.getContext(), Uri.parse("android.resource://com.windula.alarm_clock10/" +alarmMap.get(key)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });*/
+
+    }
+
+   /* @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }*/
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+}
