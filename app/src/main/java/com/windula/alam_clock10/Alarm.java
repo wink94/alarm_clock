@@ -1,7 +1,9 @@
 package com.windula.alam_clock10;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
 import java.util.Date;
 
@@ -81,4 +83,43 @@ public class Alarm {
 
         return (newRowId==-1)? false:true;
     }
+
+    public Cursor getAllAlarms(AlarmDbHelper dbHelper){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(db!=null) {
+            String[] projection = {
+                    BaseColumns._ID,
+                    AlarmContract.AlarmEntry.COLUMN_TITLE,
+                    AlarmContract.AlarmEntry.COLUMN_TIME
+            };
+
+            Cursor cursor = db.query(
+                    AlarmContract.AlarmEntry.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            return cursor;
+        }
+        else
+            return null;
+
+    }
+
+    public boolean removeAlarm(AlarmDbHelper dbHelper,String time){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = AlarmContract.AlarmEntry.COLUMN_TIME + " LIKE ?";
+
+        String[] selectionArgs = { time };
+
+        int deletedRows = db.delete( AlarmContract.AlarmEntry.TABLE_NAME, time, selectionArgs);
+
+        return (deletedRows==0)? false:true;
+    }
+
 }

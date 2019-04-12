@@ -186,6 +186,8 @@ public class popupActivity extends Activity {
 
                 if(setAlarm.setAlarm(dbHelper)){
                     Toast.makeText(getApplicationContext(),"Alarm Was Set",Toast.LENGTH_SHORT).show();
+
+                    finish();
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
