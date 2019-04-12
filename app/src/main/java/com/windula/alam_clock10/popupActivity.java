@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -28,6 +31,12 @@ public class popupActivity extends Activity {
     private HashMap<String,Integer> alarmMap;
     private MediaPlayer mediaPlayer;
     private TimePicker timePicker;
+    private EditText alarmTitle;
+    private Button setButton;
+    private Button cancelButton;
+    private Spinner alarmSpinner;
+
+    private AlarmDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +49,21 @@ public class popupActivity extends Activity {
         int width=dm.widthPixels;
         int height=dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.7),(int)(height*.7));
+        getWindow().setLayout((int)(width*.7),(int)(height*.8));
 
+        //timepicker
         timePicker=(TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
+
+        //button setup
+        setButton=findViewById(R.id.btnSet);
+        cancelButton=findViewById(R.id.btnCancel);
+
+        //alarm title
+        alarmTitle=findViewById(R.id.setTitle);
+
+        //alarm spinner
+        alarmSpinner=findViewById(R.id.alarmSpinnerList);
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -52,6 +72,12 @@ public class popupActivity extends Activity {
         getWindow().setAttributes(params);
 
         getAudioFilesToSpinner();
+
+        dbHelper=new AlarmDbHelper(getApplicationContext());
+
+        setButtonClick();
+        cancelButttonClick();
+
     }
 
     private void getAudioFilesToSpinner(){
@@ -143,5 +169,45 @@ public class popupActivity extends Activity {
         super.onStop();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    private void setButtonClick(){
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Alarm setAlarm=new Alarm();
+
+                setAlarm.setAlarmTitle(alarmTitle.getText().toString());
+                setAlarm.setAlarmTone(alarmSpinner.getSelectedItem().toString());
+                //setAlarm.setHour(timePicker.getCurrentHour());
+                //setAlarm.setMinute(timePicker.getCurrentMinute());
+
+                setAlarm.setTimeString(":",timePicker.getCurrentHour(),timePicker.getCurrentMinute());
+
+                if(setAlarm.setAlarm(dbHelper)){
+                    Toast.makeText(getApplicationContext(),"Alarm Was Set",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    private void cancelButttonClick(){
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
+        super.onDestroy();
     }
 }

@@ -4,4 +4,6 @@
     <string name="alarm_title">Add Alarm</string>
     <dimen name="design_navigation_icon_size" tools:override="true">40dp</dimen>
     <string name="alarm_name">Set a Name</string>
+    <string name="set_buton">Set</string>
+    <string name="cancel_button">Cancel</string>
 </resources>
