@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     private List<AlarmView> malarmViews;
+    private AlarmDbHelper dbHelper;
 
     public AlarmAdapter(List<AlarmView> malarmViews) {
         this.malarmViews = malarmViews;
@@ -32,7 +34,7 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         AlarmView av=malarmViews.get(i);
 
@@ -42,6 +44,16 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
         viewHolder.iv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlarmView delete=malarmViews.get(i);
+
+                if(Alarm.removeAlarm(new AlarmDbHelper(v.getContext()),delete.getTime())){
+                    Toast.makeText(v.getContext(),"Alarm Deleted",Toast.LENGTH_SHORT).show();
+                    malarmViews.remove(i);
+                    notifyItemRemoved(i);
+                }
+                else {
+                    Toast.makeText(v.getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

@@ -1,6 +1,7 @@
 package com.windula.alam_clock10;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -186,7 +187,9 @@ public class popupActivity extends Activity {
 
                 if(setAlarm.setAlarm(dbHelper)){
                     Toast.makeText(getApplicationContext(),"Alarm Was Set",Toast.LENGTH_SHORT).show();
-
+                    Intent intent=new Intent();
+                    intent.putExtra("time",setAlarm.getTime());
+                    setResult(RESULT_OK,intent);
                     finish();
                 }
                 else {

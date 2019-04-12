@@ -2,6 +2,7 @@ package com.windula.alam_clock10;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.add_alarm:
                 Intent popup = new Intent(getApplicationContext(), popupActivity.class);
-                startActivity(popup);
+                startActivityForResult(popup,10);
                 return true;
 
             default:
@@ -74,6 +75,18 @@ public class MainActivity extends AppCompatActivity {
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 10) {
+            if (data.hasExtra("time")) {
+                Toast.makeText(this, data.getExtras().getString("returnKey1")+" added",
+                        Toast.LENGTH_SHORT).show();
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -100,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
         return null;
     }
+
+
 
 
 

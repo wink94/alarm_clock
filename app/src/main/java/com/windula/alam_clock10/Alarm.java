@@ -110,14 +110,14 @@ public class Alarm {
 
     }
 
-    public boolean removeAlarm(AlarmDbHelper dbHelper,String time){
+    public static boolean removeAlarm(AlarmDbHelper dbHelper,String time){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String selection = AlarmContract.AlarmEntry.COLUMN_TIME + " LIKE ?";
 
         String[] selectionArgs = { time };
 
-        int deletedRows = db.delete( AlarmContract.AlarmEntry.TABLE_NAME, time, selectionArgs);
+        int deletedRows = db.delete( AlarmContract.AlarmEntry.TABLE_NAME, selection, selectionArgs);
 
         return (deletedRows==0)? false:true;
     }
