@@ -1,9 +1,15 @@
 package com.windula.alam_clock10;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -38,6 +44,10 @@ public class popupActivity extends Activity {
     private Spinner alarmSpinner;
 
     private AlarmDbHelper dbHelper;
+
+    private AlarmReceiver ar;
+    /*AlarmService mService;
+    boolean mBound = false;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +89,15 @@ public class popupActivity extends Activity {
         setButtonClick();
         cancelButttonClick();
 
+
+        /*Intent intent = new Intent(this, AlarmService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);*/
+
+        //register reciever
+        ar=new AlarmReceiver();
+        IntentFilter filter = new IntentFilter();
+        //filter.addAction(Intent.);
+        this.registerReceiver(ar, filter);
     }
 
     private void getAudioFilesToSpinner(){
@@ -170,6 +189,9 @@ public class popupActivity extends Activity {
         super.onStop();
         mediaPlayer.release();
         mediaPlayer = null;
+
+       // unbindService(connection);
+        //mBound = false;
     }
 
     private void setButtonClick(){
@@ -189,7 +211,17 @@ public class popupActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"Alarm Was Set",Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent();
                     intent.putExtra("time",setAlarm.getTime());
+
+                    //set intent to broadcaster
+                    Intent broadcast = new Intent();
+                    broadcast.setAction("com.windula.alarm_clock10");
+                    broadcast.putExtra("data","Notice me senpai!");
+                    sendBroadcast(broadcast);
+
                     setResult(RESULT_OK,intent);
+
+
+
                     finish();
                 }
                 else {
@@ -215,4 +247,22 @@ public class popupActivity extends Activity {
         dbHelper.close();
         super.onDestroy();
     }
+
+
+    /*private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };*/
 }

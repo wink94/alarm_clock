@@ -1,5 +1,7 @@
 package com.windula.alam_clock10;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -47,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         dbHelper=new AlarmDbHelper(getApplicationContext());
+
+        Intent intent=new Intent(getApplicationContext(),AlarmService.class);
+        if (!isMyServiceRunning(AlarmService.class)) {
+            startService(intent);
+
+        }
+
     }
 
     private void setActionBar(){
@@ -83,9 +93,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 10) {
             if (data.hasExtra("time")) {
-                Toast.makeText(this, data.getExtras().getString("returnKey1")+" added",
+                Toast.makeText(this, data.getExtras().getString("time")+" added",
                         Toast.LENGTH_SHORT).show();
                 mAdapter.notifyDataSetChanged();
+                Intent refresh = new Intent(this, MainActivity.class);
+                startActivity(refresh);
+                this.finish();
             }
         }
     }
@@ -114,8 +127,24 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
 
+    }
 
 
 }

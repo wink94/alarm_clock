@@ -3,6 +3,7 @@ package com.windula.alam_clock10;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     private List<AlarmView> malarmViews;
     private AlarmDbHelper dbHelper;
+
+
 
     public AlarmAdapter(List<AlarmView> malarmViews) {
         this.malarmViews = malarmViews;
@@ -49,7 +52,10 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
                 if(Alarm.removeAlarm(new AlarmDbHelper(v.getContext()),delete.getTime())){
                     Toast.makeText(v.getContext(),"Alarm Deleted",Toast.LENGTH_SHORT).show();
                     malarmViews.remove(i);
+
+                    Log.i("Alarm Remove",""+i);
                     notifyItemRemoved(i);
+                    notifyItemRangeChanged(i, getItemCount());
                 }
                 else {
                     Toast.makeText(v.getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();

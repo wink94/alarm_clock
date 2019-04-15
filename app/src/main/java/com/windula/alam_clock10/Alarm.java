@@ -1,6 +1,7 @@
 package com.windula.alam_clock10;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
@@ -18,6 +19,7 @@ public class Alarm {
     //private AlarmDbHelper dbHelper;
 
 
+
     public String getAlarmTitle() {
         return alarmTitle;
     }
@@ -31,7 +33,14 @@ public class Alarm {
     }
 
     public void setTimeString(String flag,int hr,int min) { //tyoe of the flag used eg:- : . / -
-        this.time = Integer.toString(hr)+flag+Integer.toString(min);
+        if((min>=0 && min <=9)) {
+            this.time = Integer.toString(hr) + flag + "0" + Integer.toString(min);
+        }
+        else if ((hr>=0 && hr<=9)){
+            this.time = "0"+Integer.toString(hr) + flag + Integer.toString(min);
+        }
+        else
+            this.time = Integer.toString(hr)+flag+Integer.toString(min);
     }
 
     public int getHour() {
@@ -81,6 +90,8 @@ public class Alarm {
 
         long newRowId = db.insert(AlarmContract.AlarmEntry.TABLE_NAME, null, values);
 
+
+
         return (newRowId==-1)? false:true;
     }
 
@@ -121,5 +132,7 @@ public class Alarm {
 
         return (deletedRows==0)? false:true;
     }
+
+
 
 }
