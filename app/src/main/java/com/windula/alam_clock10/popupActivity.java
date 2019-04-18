@@ -45,8 +45,6 @@ public class popupActivity extends Activity {
 
     private AlarmDbHelper dbHelper;
 
-    private AlarmReceiver ar;
-
     private final int ADD_ALARM=1;
 
     @Override
@@ -89,15 +87,6 @@ public class popupActivity extends Activity {
         setButtonClick();
         cancelButttonClick();
 
-
-        /*Intent intent = new Intent(this, AlarmService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);*/
-
-        //register reciever
-        ar=new AlarmReceiver();
-        IntentFilter filter = new IntentFilter("com.windula.alarm_clock10.ALARM_RECEIVER");
-        //filter.addAction(Intent.);
-        this.registerReceiver(ar, filter);
     }
 
     private void getAudioFilesToSpinner(){
@@ -154,44 +143,16 @@ public class popupActivity extends Activity {
             }
         });
 
-       /* spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String key=parent.getItemAtPosition(position).toString();
-
-                if(mediaPlayer==null){
-                    mediaPlayer =  MediaPlayer.create(view.getContext(),alarmMap.get(key));
-                    mediaPlayer.start();
-                }
-                else {
-                    mediaPlayer.reset();
-                    try {
-                        mediaPlayer.setDataSource(view.getContext(), Uri.parse("android.resource://com.windula.alarm_clock10/" +alarmMap.get(key)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });*/
 
     }
 
-   /* @Override
-    protected void onPause() {
-        super.onPause();
-        mediaPlayer.release();
-        mediaPlayer = null;
-    }*/
 
     @Override
     protected void onStop() {
         super.onStop();
         mediaPlayer.release();
         mediaPlayer = null;
-        //unregisterReceiver(ar);
-       // unbindService(connection);
-        //mBound = false;
+
     }
 
     private void setButtonClick(){
@@ -202,8 +163,6 @@ public class popupActivity extends Activity {
 
                 setAlarm.setAlarmTitle(alarmTitle.getText().toString());
                 setAlarm.setAlarmTone(alarmSpinner.getSelectedItem().toString());
-                //setAlarm.setHour(timePicker.getCurrentHour());
-                //setAlarm.setMinute(timePicker.getCurrentMinute());
 
                 setAlarm.setTimeString(":",timePicker.getCurrentHour(),timePicker.getCurrentMinute());
 
@@ -243,33 +202,14 @@ public class popupActivity extends Activity {
     protected void onPause() {
         super.onPause();
 
-        if(!ar.isInitialStickyBroadcast()){
-            unregisterReceiver(ar);
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         dbHelper.close();
-        //unregisterReceiver(ar);
+
     }
 
 
-    /*private ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };*/
 }

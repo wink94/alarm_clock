@@ -53,9 +53,9 @@ public class AlarmQuiz extends AppCompatActivity {
 
     private String checkedAnswer;
 
-    public static final String RECEIVE_ALARM = "com.your.package.RECEIVE_ALARM";
 
-    LocalBroadcastManager bManager;
+
+
     private MediaPlayer mediaPlayer;
 
     @Override
@@ -85,13 +85,7 @@ public class AlarmQuiz extends AppCompatActivity {
         ans3=(RadioButton)findViewById(R.id.rb3);
         check=(Button)findViewById(R.id.check);
 
-        /*//register reciver
-        bManager = LocalBroadcastManager.getInstance(this);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(RECEIVE_ALARM);
-        bManager.registerReceiver(bReceiver, intentFilter);*/
 
-        //random initialize
         rand=new Random();
         queue = Volley.newRequestQueue(getApplicationContext());
         //set Quiz
@@ -202,21 +196,7 @@ public class AlarmQuiz extends AppCompatActivity {
         }
     }
 
- /*   @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        bManager.unregisterReceiver(bReceiver);
-    }
 
-    private BroadcastReceiver bReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(RECEIVE_ALARM)) {
-                String serviceJsonString = intent.getStringExtra("json");
-                //Do something with the string
-            }
-        }
-    };*/
 
     private void setButtonClick(){
         check.setOnClickListener(new View.OnClickListener() {

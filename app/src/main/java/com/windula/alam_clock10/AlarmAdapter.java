@@ -64,11 +64,7 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
                     malarmViews.remove(i);
 
                     Log.i("Alarm Remove",""+i);
-                    //register broadcaster
-                   /* ar=new AlarmReceiver();
-                    IntentFilter filter = new IntentFilter("com.windula.alarm_clock10.ALARM_RECEIVER2");
-                    //filter.addAction(Intent.);
-                    v.getContext().registerReceiver(ar, filter);*/
+
 
                     //set intent to broadcaster
                     Intent broadcast = new Intent();

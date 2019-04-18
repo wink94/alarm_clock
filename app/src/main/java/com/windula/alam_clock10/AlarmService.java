@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,12 +34,7 @@ public class AlarmService extends Service {
 
     private static final String TAG = "IntentService";
 
-    /*public AlarmService() {
-        super("AlarmService");
 
-        alarms=new ArrayList<>();
-
-    }*/
 
     @Override
     public int onStartCommand( Intent intent, int flags, int startId) {
@@ -69,7 +65,7 @@ public class AlarmService extends Service {
             public void run() {
 
 
-                String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
+                String timeStamp = new SimpleDateFormat("HH:mm").format(new Date());
 
                 Log.i("in timer", "in timer ++++  "+ (counter++)+" current time :"+timeStamp);
 
@@ -99,14 +95,6 @@ public class AlarmService extends Service {
     }
 
 
-    /*@Override
-    protected void onHandleIntent(Intent intent) {
-
-
-
-        //Log.i(TAG,intent.getDataString());
-    }*/
-
     private boolean readDb(String selectTime){
 
         SQLiteDatabase db = new AlarmDbHelper(getApplicationContext()).getReadableDatabase();
@@ -131,18 +119,7 @@ public class AlarmService extends Service {
                     null
             );
 
-            /*if(cursor.getColumnCount()>0){
-                if (cursor.moveToFirst()) {
-                    while (!cursor.isAfterLast()) {
-                        String time = cursor.getString(cursor.getColumnIndex("time"));
-                        //String title  =  cursor.getString(cursor.getColumnIndex("title"));
 
-                        alarms.add(time);
-                        cursor.moveToNext();
-                    }
-
-                }
-            }*/
 
             if(cursor.getCount()>0) {
 

@@ -23,7 +23,7 @@ public class Quiz {
     }
 
     public void setCorrect_answer(String correct_answer) {
-        this.correct_answer = correct_answer.replaceAll("&quot;","\"");;
+        this.correct_answer = correct_answer.replaceAll("&quot;","\"");
     }
 
     public String[] getIncorrect_answers() {
