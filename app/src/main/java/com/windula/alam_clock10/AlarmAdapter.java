@@ -1,7 +1,11 @@
 package com.windula.alam_clock10;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +21,16 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     private List<AlarmView> malarmViews;
     private AlarmDbHelper dbHelper;
+    private AlarmReceiver ar;
 
-
+    private final int REMOVE_ALARM=0;
 
     public AlarmAdapter(List<AlarmView> malarmViews) {
         this.malarmViews = malarmViews;
+    }
+
+    public AlarmReceiver getAr() {
+        return ar;
     }
 
     @NonNull
@@ -32,12 +41,13 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
         View alarmview=inflater.inflate(R.layout.alarm_layout,viewGroup,false);
 
+
         ViewHolder viewHolder=new ViewHolder(alarmview);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         AlarmView av=malarmViews.get(i);
 
@@ -54,8 +64,24 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
                     malarmViews.remove(i);
 
                     Log.i("Alarm Remove",""+i);
+                    //register broadcaster
+                   /* ar=new AlarmReceiver();
+                    IntentFilter filter = new IntentFilter("com.windula.alarm_clock10.ALARM_RECEIVER2");
+                    //filter.addAction(Intent.);
+                    v.getContext().registerReceiver(ar, filter);*/
+
+                    //set intent to broadcaster
+                    Intent broadcast = new Intent();
+                    broadcast.setAction("com.windula.alarm_clock10.ALARM_RECEIVER2");
+                    broadcast.putExtra("data",REMOVE_ALARM);
+                    v.getContext().sendBroadcast(broadcast);
+
+                    //notify recyclerviewchange
                     notifyItemRemoved(i);
                     notifyItemRangeChanged(i, getItemCount());
+
+                    //unregister receiver
+                    //v.getContext().unregisterReceiver(ar);
                 }
                 else {
                     Toast.makeText(v.getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
@@ -64,6 +90,15 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
             }
         });
     }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        LocalBroadcastManager.getInstance(recyclerView.getContext()).unregisterReceiver(ar);
+        Log.i("AlarmAdapter","onDetachedFromRecyclerView");
+    }
+
+
 
     @Override
     public int getItemCount() {

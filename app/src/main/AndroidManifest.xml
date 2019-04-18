@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.windula.alam_clock10">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,10 +14,13 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true">
+            <intent-filter>
+                <action android:name="com.windula.alarm_clock10.ALARM_RECEIVER2"/>
+            </intent-filter>
 
         </receiver>
 
-        <activity android:name=".AlarmQuiz" />
+        <activity android:name=".AlarmQuiz" android:permission="android.permission.INTERNET"/>
 
         <service
             android:name=".AlarmService"

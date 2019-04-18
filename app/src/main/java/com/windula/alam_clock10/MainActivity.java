@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private AlarmDbHelper dbHelper;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private AlarmAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
 
@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(getApplicationContext(),AlarmService.class);
         if (!isMyServiceRunning(AlarmService.class)) {
             startService(intent);
-
         }
 
     }
@@ -144,7 +143,10 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         dbHelper.close();
 
+
     }
+
+
 
 
 }

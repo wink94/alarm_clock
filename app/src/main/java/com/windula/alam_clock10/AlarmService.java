@@ -19,29 +19,33 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AlarmService extends IntentService {
+
+public class AlarmService extends Service {
 
     private ArrayList<String> alarms;
     // Binder given to clients
     private final IBinder binder = new LocalBinder();
-/*    private Timer timer;
+    private Timer timer;
     private TimerTask timerTask;
     private int counter=0;
-    long oldTime=0;*/
+    public static String alarmID;
+    long oldTime=0;
 
     private static final String TAG = "IntentService";
 
-    public AlarmService() {
+    /*public AlarmService() {
         super("AlarmService");
 
         alarms=new ArrayList<>();
 
-    }
+    }*/
 
     @Override
     public int onStartCommand( Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        readDb();
+        Log.i(TAG, "Alarm service start");
+
+        startTimer();
         return START_STICKY;
     }
 
@@ -52,7 +56,7 @@ public class AlarmService extends IntentService {
         return binder;
     }
 
-   /* public void startTimer() {
+    public void startTimer() {
         //set a new Timer
         timer = new Timer();
 
@@ -64,24 +68,24 @@ public class AlarmService extends IntentService {
             @Override
             public void run() {
 
-                readDb();
+
                 String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
-                Log.i("in timer", "in timer ++++  "+ (counter++));
-                *//*for(String time:alarms){
-                    if(time.equalsIgnoreCase(timeStamp)){
-                        Toast.makeText(getApplicationContext(),time ,Toast.LENGTH_LONG).show();
 
-                        Intent popup = new Intent(getApplicationContext(), AlarmQuiz.class);
-                        startActivity(popup);
-                    }
-                }*//*
+                Log.i("in timer", "in timer ++++  "+ (counter++)+" current time :"+timeStamp);
 
-                if(alarms.contains(timeStamp)){
+
+                if(readDb(timeStamp)){
                     Log.i("in timer", "alarm!!! ");
+                    Intent quizView=new Intent(getApplicationContext(),AlarmQuiz.class);
+                    quizView.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(quizView);
                 }
 
+
+
             }
-        },1000,1000);//
+        },0,1000*57);//
     }
 
     public void initializeTimerTask() {
@@ -92,38 +96,42 @@ public class AlarmService extends IntentService {
             }
         };
 
-    }*/
+    }
 
 
-    @Override
+    /*@Override
     protected void onHandleIntent(Intent intent) {
 
 
 
         //Log.i(TAG,intent.getDataString());
-    }
+    }*/
 
-    private void readDb(){
+    private boolean readDb(String selectTime){
 
         SQLiteDatabase db = new AlarmDbHelper(getApplicationContext()).getReadableDatabase();
         if(db!=null) {
             String[] projection = {
                     BaseColumns._ID,
-                    AlarmContract.AlarmEntry.COLUMN_TITLE,
-                    AlarmContract.AlarmEntry.COLUMN_TIME
+
+                    AlarmContract.AlarmEntry.COLUMN_TIME,
+                    AlarmContract.AlarmEntry.COLUMN_NAME_ALARM
             };
+
+            String selection =  AlarmContract.AlarmEntry.COLUMN_TIME + " = ?";
+            String[] selectionArgs = { selectTime };
 
             Cursor cursor = db.query(
                     AlarmContract.AlarmEntry.TABLE_NAME,
                     projection,
-                    null,
-                    null,
+                    selection,
+                    selectionArgs,
                     null,
                     null,
                     null
             );
 
-            if(cursor.getColumnCount()>0){
+            /*if(cursor.getColumnCount()>0){
                 if (cursor.moveToFirst()) {
                     while (!cursor.isAfterLast()) {
                         String time = cursor.getString(cursor.getColumnIndex("time"));
@@ -134,26 +142,40 @@ public class AlarmService extends IntentService {
                     }
 
                 }
+            }*/
+
+            if(cursor.getCount()>0) {
+
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast()) {
+                        this.alarmID = cursor.getString(cursor.getColumnIndex("alarm"));
+                        //String title  =  cursor.getString(cursor.getColumnIndex("title"));
+
+                        cursor.moveToNext();
+                    }
+                    return true;
+                }
+
             }
 
         }
 
+        return false;
     }
 
-/*
     @Override
     public void onDestroy() {
         super.onDestroy();
         stoptimertask();
-    }*/
+    }
 
-   /* public void stoptimertask() {
+    public void stoptimertask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
-    }*/
+    }
 
     public class LocalBinder extends Binder {
         AlarmService getService() {

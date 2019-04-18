@@ -46,8 +46,8 @@ public class popupActivity extends Activity {
     private AlarmDbHelper dbHelper;
 
     private AlarmReceiver ar;
-    /*AlarmService mService;
-    boolean mBound = false;*/
+
+    private final int ADD_ALARM=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,7 @@ public class popupActivity extends Activity {
 
         //register reciever
         ar=new AlarmReceiver();
-        IntentFilter filter = new IntentFilter();
+        IntentFilter filter = new IntentFilter("com.windula.alarm_clock10.ALARM_RECEIVER");
         //filter.addAction(Intent.);
         this.registerReceiver(ar, filter);
     }
@@ -189,7 +189,7 @@ public class popupActivity extends Activity {
         super.onStop();
         mediaPlayer.release();
         mediaPlayer = null;
-
+        //unregisterReceiver(ar);
        // unbindService(connection);
         //mBound = false;
     }
@@ -214,13 +214,11 @@ public class popupActivity extends Activity {
 
                     //set intent to broadcaster
                     Intent broadcast = new Intent();
-                    broadcast.setAction("com.windula.alarm_clock10");
-                    broadcast.putExtra("data","Notice me senpai!");
+                    broadcast.setAction("com.windula.alarm_clock10.ALARM_RECEIVER");
+                    broadcast.putExtra("data",ADD_ALARM);
                     sendBroadcast(broadcast);
 
                     setResult(RESULT_OK,intent);
-
-
 
                     finish();
                 }
@@ -242,10 +240,19 @@ public class popupActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(!ar.isInitialStickyBroadcast()){
+            unregisterReceiver(ar);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         dbHelper.close();
-        super.onDestroy();
+        //unregisterReceiver(ar);
     }
 
 

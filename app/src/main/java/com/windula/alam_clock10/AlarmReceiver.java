@@ -26,13 +26,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             this.intent = intent;
         }
 
+
         @Override
         protected String doInBackground(String... strings) {
+
             StringBuilder sb = new StringBuilder();
             sb.append("Action: " + intent.getAction() + "\n");
-            sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() + "\n");
+            sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() +" data: "+intent.getExtras().getString("data")+ "\n");
             String log = sb.toString();
             Log.d(TAG, log);
+
+            //int data=intent.getExtras().getInt("data");
+
             return log;
         }
 
@@ -42,6 +47,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             // Must call finish() so the BroadcastReceiver can be recycled.
             pendingResult.finish();
         }
+
+
     }
+
+
 
 }

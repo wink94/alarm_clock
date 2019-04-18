@@ -6,4 +6,5 @@
     <string name="alarm_name">Set a Name</string>
     <string name="set_buton">Set</string>
     <string name="cancel_button">Cancel</string>
+    <string name="alarm_off_title">Answer this question to turn off alarm !!!</string>
 </resources>
