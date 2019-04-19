@@ -1,8 +1,10 @@
 package com.windula.alam_clock10;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
-
+import java.net.URLDecoder;
 import java.util.Random;
+
 
 public class Quiz {
 
@@ -15,7 +17,9 @@ public class Quiz {
     }
 
     public void setQuestion(String question) {
-        this.question = question.replaceAll("&quot;","\"");
+        URLDecoder decoder =new URLDecoder();
+        //this.question = question.replaceAll("&quot;","\"");
+        this.question= StringEscapeUtils.unescapeHtml4(question);
     }
 
     public String getCorrect_answer() {

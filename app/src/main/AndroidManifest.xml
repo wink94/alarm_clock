@@ -20,7 +20,7 @@
 
         </receiver>
 
-        <activity android:name=".AlarmQuiz" android:permission="android.permission.INTERNET"/>
+        <activity android:name=".AlarmQuiz" android:theme="@style/AppTheme.quiz" android:permission="android.permission.INTERNET"/>
 
         <service
             android:name=".AlarmService"
@@ -30,6 +30,7 @@
         <activity
             android:name=".popupActivity"
             android:theme="@style/AppTheme.popup" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

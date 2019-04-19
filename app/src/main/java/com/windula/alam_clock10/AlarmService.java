@@ -1,6 +1,6 @@
 package com.windula.alam_clock10;
 
-import android.app.IntentService;
+
 import android.app.Service;
 import android.content.Intent;
 
@@ -33,7 +33,6 @@ public class AlarmService extends Service {
     long oldTime=0;
 
     private static final String TAG = "IntentService";
-
 
 
     @Override
@@ -118,8 +117,6 @@ public class AlarmService extends Service {
                     null,
                     null
             );
-
-
 
             if(cursor.getCount()>0) {
 

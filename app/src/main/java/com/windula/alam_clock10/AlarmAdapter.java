@@ -76,8 +76,7 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
                     notifyItemRemoved(i);
                     notifyItemRangeChanged(i, getItemCount());
 
-                    //unregister receiver
-                    //v.getContext().unregisterReceiver(ar);
+
                 }
                 else {
                     Toast.makeText(v.getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
@@ -98,7 +97,7 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return malarmViews.size();
+        return (malarmViews==null)?0:malarmViews.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

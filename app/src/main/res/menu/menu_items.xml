@@ -5,7 +5,7 @@
     <item
         android:id="@+id/add_alarm"
         android:icon="@drawable/ic_action_name"
-
+        
         app:showAsAction="always"
         android:title="@string/alarm_title"
         android:visible="true"
