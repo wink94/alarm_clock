@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
 
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
@@ -51,34 +51,19 @@
         <requestFocus />
     </EditText>
 
-    <Spinner
-        android:id="@+id/alarmSpinnerList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="20dp"
-        android:clickable="true"
-        android:isScrollContainer="true"
-        android:padding="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setTitle">
-
-    </Spinner>
-
-
     <TableRow
+        android:id="@+id/tableRow"
         android:layout_width="264dp"
         android:layout_height="62dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmSpinnerList">
+        app:layout_constraintTop_toBottomOf="@+id/tableRow2">
 
 
         <Button
@@ -88,8 +73,8 @@
             android:layout_gravity="left"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:text="@string/set_buton"
             android:background="@color/colorAlarmView"
+            android:text="@string/set_buton"
             tools:layout_editor_absoluteX="139dp"
             tools:layout_editor_absoluteY="499dp" />
 
@@ -101,14 +86,57 @@
             android:layout_gravity="right"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="4dp"
-            android:text="@string/cancel_button"
             android:background="@color/colorAlarmView"
+            android:text="@string/cancel_button"
             tools:layout_editor_absoluteX="798dp"
             tools:layout_editor_absoluteY="499dp" />
 
 
     </TableRow>
 
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="264dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setTitle">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="Tone"
+            android:textColor="@color/colorAlarmView"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="436dp" />
+
+        <Spinner
+            android:id="@+id/alarmSpinnerList"
+            android:layout_width="271dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:isScrollContainer="true"
+            android:padding="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.112"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            tools:layout_editor_absoluteY="439dp">
+
+        </Spinner>
+    </TableRow>
 
 
 </android.support.constraint.ConstraintLayout>

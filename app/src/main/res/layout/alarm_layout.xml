@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/alarm_title"
-        android:layout_width="0dp"
+        android:layout_width="2dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="18dp"
@@ -30,7 +30,7 @@
     <ImageView
         android:id="@+id/alarm_delete"
         android:src="@drawable/ic_delete"
-        android:layout_width="wrap_content"
+        android:layout_width="5dp"
         android:layout_height="30dp"
         android:layout_weight="1"
         android:layout_marginRight="1dp"

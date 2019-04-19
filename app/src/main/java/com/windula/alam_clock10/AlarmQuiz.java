@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -158,7 +160,7 @@ public class AlarmQuiz extends AppCompatActivity {
 
         int quizType=rand.nextInt(2);
 
-        if (quizType==0){
+        if (quizType==0 || !isNetworkAvailable()){
             setQuiz.MathQuizGen();
             setUpView();
         }
@@ -255,6 +257,13 @@ public class AlarmQuiz extends AppCompatActivity {
                 default:
                     checkedAnswer="";
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
